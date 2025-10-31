@@ -1,0 +1,25 @@
+version: '3.9'
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: alpha_genesis
+    ports:
+      - "5432:5432"
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    environment:
+      - DATABASE_URL=postgresql://user:password@db:5432/alpha_genesis
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - db
+      - redis
+    command: ["python", "src/main.py", "--mode", "backtest"]
