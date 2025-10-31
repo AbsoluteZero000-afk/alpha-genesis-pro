@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alpha-genesis-config
+  namespace: alpha-genesis
+data:
+  LOG_LEVEL: "INFO"
+  PROMETHEUS_PORT: "8000"
+  MAX_PORTFOLIO_RISK: "0.02"
+  MAX_DAILY_DRAWDOWN: "0.05"
+  DEFAULT_POSITION_SIZE: "0.01"
+  ENVIRONMENT: "production"

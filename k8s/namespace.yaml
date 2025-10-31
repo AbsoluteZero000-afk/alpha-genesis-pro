@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: alpha-genesis
+  labels:
+    name: alpha-genesis
+    environment: production

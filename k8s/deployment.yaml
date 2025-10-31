@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alpha-genesis-app
+  namespace: alpha-genesis
+  labels:
+    app: alpha-genesis-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alpha-genesis-app
+  template:
+    metadata:
+      labels:
+        app: alpha-genesis-app
+    spec:
+      containers:
+      - name: alpha-genesis
+        image: alpha-genesis-pro:latest
+        ports:
+        - containerPort: 8000
+          name: metrics
+        env:
+        - name: LOG_LEVEL
+          valueFrom:
+            configMapKeyRef:
+              name: alpha-genesis-config
+              key: LOG_LEVEL
+        - name: PROMETHEUS_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: alpha-genesis-config
+              key: PROMETHEUS_PORT
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: alpha-genesis-secrets
+              key: DATABASE_URL
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: alpha-genesis-secrets
+              key: REDIS_URL
+        - name: ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              name: alpha-genesis-secrets
+              key: ENCRYPTION_KEY
+        - name: ALPACA_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: alpha-genesis-secrets
+              key: ALPACA_API_KEY
+        - name: ALPACA_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: alpha-genesis-secrets
+              key: ALPACA_SECRET_KEY
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      imagePullPolicy: IfNotPresent
