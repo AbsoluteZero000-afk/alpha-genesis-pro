@@ -4,19 +4,19 @@ import argparse
 import pandas as pd
 import yfinance as yf
 from config import get_settings
-from utils.logger import configure_logging
-from backtesting.engine import BacktestEngine
-from execution.paper_broker import PaperBroker
-from risk.risk_manager import RiskManager
+from src.utils.logger import configure_logging
+from src.backtesting.engine import BacktestEngine
+from src.execution.paper_broker import PaperBroker
+from src.risk.risk_manager import RiskManager
 
 TECH_LIB = os.getenv("TECH_LIB", "ta-lib").lower()
 
 if TECH_LIB == "ta-lib":
-    from strategies.trend_following_talib import TrendFollowingStrategy
-    from strategies.mean_reversion_talib import MeanReversionStrategy
+    from src.strategies.trend_following_talib import TrendFollowingStrategy
+    from src.strategies.mean_reversion_talib import MeanReversionStrategy
 else:
-    from strategies.trend_following import TrendFollowingStrategy
-    from strategies.mean_reversion import MeanReversionStrategy
+    from src.strategies.trend_following import TrendFollowingStrategy
+    from src.strategies.mean_reversion import MeanReversionStrategy
 
 
 def run_backtest() -> None:
