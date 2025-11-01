@@ -1,15 +1,22 @@
 from __future__ import annotations
+import os
 import argparse
-import asyncio
 import pandas as pd
 import yfinance as yf
 from config import get_settings
 from utils.logger import configure_logging
-from strategies.trend_following import TrendFollowingStrategy
-from strategies.mean_reversion import MeanReversionStrategy
 from backtesting.engine import BacktestEngine
 from execution.paper_broker import PaperBroker
 from risk.risk_manager import RiskManager
+
+TECH_LIB = os.getenv("TECH_LIB", "ta-lib").lower()
+
+if TECH_LIB == "ta-lib":
+    from strategies.trend_following_talib import TrendFollowingStrategy
+    from strategies.mean_reversion_talib import MeanReversionStrategy
+else:
+    from strategies.trend_following import TrendFollowingStrategy
+    from strategies.mean_reversion import MeanReversionStrategy
 
 
 def run_backtest() -> None:
@@ -35,7 +42,6 @@ def main():
     if args.mode == "backtest":
         run_backtest()
     else:
-        # Placeholder for live trading entrypoint (would reuse same components with live data and real broker)
         run_backtest()
 
 
